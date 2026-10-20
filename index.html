@@ -166,9 +166,13 @@
   }
   @media (max-width:560px){.legs{grid-template-columns:1fr}h1{font-size:44px}.stance{font-size:22px}.sec-head h2{font-size:24px}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  .themebtn{position:absolute;top:16px;right:max(16px,env(safe-area-inset-right,0px));width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:20}
+  .themebtn:hover{color:var(--green-deep);border-color:color-mix(in srgb,var(--green) 35%,transparent)}
+  .wrap{position:relative}
 </style>
 
 <div class="wrap">
+  <button id="themeBtn" class="themebtn" type="button" aria-label="Switch theme"></button>
   <header class="mast">
     <div class="crest"><span>I&amp;L</span></div>
     <div class="eyebrow">House Hunting Dossier</div>
@@ -467,6 +471,16 @@
     });
   });
 
+  var MOON_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  var SUN_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  var THEME_KEY="il_theme";
+  function applyTheme(t){var r=document.documentElement;if(t==="light"||t==="dark")r.setAttribute("data-theme",t);else r.removeAttribute("data-theme");}
+  function effectiveTheme(){var a=document.documentElement.getAttribute("data-theme");if(a)return a;return (window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}
+  function paintThemeBtn(){var b=document.getElementById("themeBtn");if(!b)return;var e=effectiveTheme();b.innerHTML=e==="dark"?SUN_SVG:MOON_SVG;b.setAttribute("aria-label",e==="dark"?"Switch to light mode":"Switch to dark mode");}
+  try{var savedT=localStorage.getItem(THEME_KEY);if(savedT)applyTheme(savedT);}catch(e){}
+  var themeBtn=document.getElementById("themeBtn");
+  if(themeBtn)themeBtn.addEventListener("click",function(){var n=effectiveTheme()==="dark"?"light":"dark";applyTheme(n);try{localStorage.setItem(THEME_KEY,n);}catch(e){}paintThemeBtn();});
+  paintThemeBtn();
   render();
 })();
 </script>
