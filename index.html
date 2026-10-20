@@ -481,6 +481,12 @@
   var themeBtn=document.getElementById("themeBtn");
   if(themeBtn)themeBtn.addEventListener("click",function(){var n=effectiveTheme()==="dark"?"light":"dark";applyTheme(n);try{localStorage.setItem(THEME_KEY,n);}catch(e){}paintThemeBtn();});
   paintThemeBtn();
+  var loadedAt=Date.now();
+  function lbOpen(){var l=document.getElementById("lb");return l&&l.classList.contains("open");}
+  document.addEventListener("visibilitychange",function(){
+    if(document.visibilityState==="visible"&&Date.now()-loadedAt>1200000&&!lbOpen()){location.reload();}
+  });
+  setInterval(function(){try{if(document.visibilityState==="visible"&&Date.now()-loadedAt>3600000&&!lbOpen())location.reload();}catch(e){}},600000);
   render();
 })();
 </script>
